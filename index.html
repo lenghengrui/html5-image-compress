@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,16 +17,10 @@
 <body>
 <h1>Canvas Compressor</h1>
 
-
 Compressed Size Limit to <input type="number" id="js-size-limit" value="1"> MB<br>
-<input type="file" accept="image/jpeg,image/png,image/gif" id="selectImage" >
-
-
+<input type="file" accept="image/jpeg,image/png,image/gif" id="js-select-image" >
 
 <div id="container">
-
-
-
   <div class="col">
     <canvas id="canvas"></canvas>
   </div>
@@ -42,7 +35,7 @@ Compressed Size Limit to <input type="number" id="js-size-limit" value="1"> MB<b
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('2d');
   var preview = document.getElementById('preview');
-  var si = document.getElementById('selectImage');
+  var si = document.getElementById('js-select-image');
   si.addEventListener('change', function(e) {
     console.log('Processing...');
 
