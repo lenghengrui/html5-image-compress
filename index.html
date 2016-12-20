@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Compressor</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <style>
+    .col {
+      display: inline-block;
+      width: 49%;
+    }
+    .quality {
+      width: 120px;
+      margin-left: 200px;
+    }
+  </style>
+</head>
+<body>
+<h1>Canvas Compressor</h1>
+
+
+Compressed Size Limit to <input type="number" id="js-size-limit" value="1"> MB<br>
+<input type="file" accept="image/jpeg,image/png,image/gif" id="selectImage" >
+
+
+
+<div id="container">
+
+
+
+  <div class="col">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="col">
+    <a id="download" download="compressed.jpg" style="margin-left: 140px">download as an image</a>
+    <img id="preview" src="">
+  </div>
+</div>
+
+<script>
+
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+  var preview = document.getElementById('preview');
+  var si = document.getElementById('selectImage');
+  si.addEventListener('change', function(e) {
+    console.log('Processing...');
+
+    var sizeLimit = document.getElementById('js-size-limit').getAttribute('value');
+    var imageFile = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function () {
+      var imageEle = new Image();
+      imageEle.src = this.result;
+      imageEle.onload = function() {
+        context.clearRect(0,0,canvas.width,canvas.height);
+        canvas.setAttribute("width", imageEle.width);
+        canvas.setAttribute("height", imageEle.height);
+        context.drawImage(imageEle, 0, 0, imageEle.width, imageEle.height, 0, 0,imageEle.width, imageEle.height);
+
+        var qualityLevel = 0.8;
+        while(1) {
+          dataUrl = canvas.toDataURL(imageFile.type, qualityLevel);
+          if ((dataUrl.length * 3/4) < (sizeLimit*1024*1024)) {
+            break;
+          }
+          qualityLevel -= 0.01;
+        }
+        console.log('Quality is',qualityLevel);
+
+        preview.src = dataUrl;
+        document.getElementById('download').href = dataUrl;
+      };
+
+    };
+    reader.readAsDataURL(imageFile);
+  });
+
+</script>
+</body>
+</html>
